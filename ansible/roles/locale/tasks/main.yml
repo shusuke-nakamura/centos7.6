@@ -1,0 +1,9 @@
+---
+# 日本時間等の設定
+- name: set Timezone
+  timezone:
+    name: "{{ config_zone }}"
+- name: set localectl
+  command: localectl set-locale LANG="{{ config_locale }}"
+- name: set keybord
+  command: localectl set-keymap "{{ config_keymap }}"

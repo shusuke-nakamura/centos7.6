@@ -1,0 +1,111 @@
+# ========================================================
+# Rbenvの存在チェック
+# ========================================================
+- name: does rbenv exist?
+  stat:
+    path: "{{ config_ruby_install_dir }}"
+  register: dir_stat
+
+# ========================================================
+# 以下のRubyがインストールされている場合は設定しない
+# ========================================================
+
+# ========================================================
+# githubよりrbenv(Rubyの複数バージョン切替)をクローンする
+# ========================================================
+- name: install rbenv
+  git: 
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: "{{ config_ruby_install_dir }}"
+  when: dir_stat.stat.isdir is not defined and not ansible_check_mode
+
+# ========================================================
+# githubよりruby-build(rubyインストーラ)をクローンする
+# ========================================================
+- name: install ruby-build
+  git: 
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: "{{ config_ruby_install_dir }}/plugins/ruby-build"
+  when: dir_stat.stat.isdir is not defined and not ansible_check_mode
+
+# ========================================================
+# env_shellの配置
+# ========================================================
+- name: env_shellの配置
+  copy:
+    src: env.sh
+    dest: /etc/profile.d/env.sh
+  when: dir_stat.stat.isdir is not defined and not ansible_check_mode
+
+# ========================================================
+# インストールの確認
+# ========================================================
+- name: Check rbenv version
+  shell: bash -lc "rbenv versions | grep {{ config_ruby_version }}"
+  register: rbenv_check_install
+  changed_when: False
+  ignore_errors: yes
+
+# ========================================================
+# ruby 2.6.2バージョンをインストールする
+# ========================================================
+- name: install ruby
+  shell: bash -lc "rbenv install -v {{ config_ruby_version }}"
+  when: rbenv_check_install|failed
+
+# ========================================================
+# rbenv rehashを行う
+# ========================================================
+- name: rbenv rehash
+  shell: bash -lc "rbenv rehash"
+  when: rbenv_check_install|failed
+ 
+# ========================================================
+# Ruby Check バージョン
+# ========================================================
+- name: Check ruby version
+  shell: bash -lc "rbenv version | grep {{ config_ruby_version }}"
+  register: rbenv_check_default
+  changed_when: False
+  ignore_errors: yes
+  
+# ========================================================
+# DefaultのRubyを設定
+# ========================================================
+- name: Set default ruby version
+  shell: bash -lc "rbenv global {{ config_ruby_version }}"
+  when: rbenv_check_default|failed
+
+# ========================================================
+# .gemrcの存在チェック
+# ========================================================
+- name: does .gemrc exist?
+  stat:
+    path: ~/.gemrc
+  register: gemrc_stat
+
+# ========================================================
+# .gemrcの配置
+# ========================================================
+- name: .gemrcの配置
+  copy:
+    src: .gemrc
+    dest: ~/.gemrc
+  when: not gemrc_stat.stat.exists
+
+# ========================================================
+# bundlerの存在チェック
+# ========================================================
+- name: does bundler exist?
+  stat:
+    path: "{{ config_ruby_install_dir }}/shims/bundler"
+  register: bundler_stat
+
+
+# ========================================================
+# bundlerのインストール
+# ========================================================
+- name: bundler install
+  command: bash -lc "gem install bundler"
+  when: not bundler_stat.stat.exists
+

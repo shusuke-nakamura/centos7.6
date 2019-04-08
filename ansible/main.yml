@@ -1,0 +1,15 @@
+---
+- name: Centos7.6 ローカル開発環境構築
+  hosts: all
+  become: true
+  vars_files:
+    - common_vars/all.yml
+  roles:
+    - locale
+    - yum
+    - ruby
+    - httpd
+    - php
+    - mariadb
+    - coffeescript
+

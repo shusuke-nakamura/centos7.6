@@ -1,0 +1,38 @@
+---
+- name: enable and start mariadb-service
+  systemd:
+    name: mariadb
+    enabled: yes
+    state: started
+    
+- name: install epel-release
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install required software
+  yum: name={{ item }} state=present enablerepo=epel
+  with_items:
+    - mariadb-devel
+    - python-devel
+    - python36-devel
+    - python-pip
+
+- name: install MySQL-python using pip
+  pip:
+    name: "{{ item }}"
+    state: forcereinstall
+  with_items:
+    - MySQL-python
+
+- name: root アカウントのパスワードを設定
+  mysql_user:
+    name: root
+    host: localhost
+    password: root
+
+- name: deploy ~/.my.cnf
+  template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+    mode: 0600

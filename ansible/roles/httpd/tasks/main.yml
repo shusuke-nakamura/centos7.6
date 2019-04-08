@@ -1,0 +1,28 @@
+---
+- name: install apache
+  yum:
+    name: httpd
+    state: latest
+
+- name: start apache
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: check existance /etc/httpd/conf
+  stat: path=/etc/httpd/conf
+  register: etc_httpd_conf
+  
+- name: deploy /etc/httpd/conf/httpd.conf
+  template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+  when: etc_httpd_conf.stat.exists
+  
+- name: check existance /usr/local/apache2/conf
+  stat: path=/usr/local/apache2/conf
+  register: usr_local_apache_conf
+  
+- name: deploy /usr/local/apache2/conf/httpd.conf
+  template: src=httpd.conf.j2 dest=/usr/local/apache2/conf/httpd.conf
+  when: usr_local_apache_conf.stat.exists
+
