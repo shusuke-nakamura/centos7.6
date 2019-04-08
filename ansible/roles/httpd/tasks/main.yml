@@ -26,3 +26,10 @@
   template: src=httpd.conf.j2 dest=/usr/local/apache2/conf/httpd.conf
   when: usr_local_apache_conf.stat.exists
 
+- name: check existance /etc/httpd/conf.d
+  stat: path=/etc/httpd/conf.d
+  register: etc_httpd_conf_d
+
+- name: deploy /etc/httpd/conf.d/userdir.conf
+  template: src=userdir.conf.j2 dest=/etc/httpd/conf.d/userdir.conf
+  when: etc_httpd_conf_d.stat.exists
