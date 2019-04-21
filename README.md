@@ -10,3 +10,10 @@
 ### 1. Ruby
 ### 2. VartualBox
 ### 3. Vagrant
+
+## 手順
+WindowsにRuby、VartualBox、Vagrantをインストール。
+その後、コマンドプロンプトより「vbguest」をインストールする
+vagrant plugin install vagrant-vbguest
+本ツールをダウンロードし、「vagrant up --provision」を実行する
+
