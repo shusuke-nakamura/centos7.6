@@ -12,8 +12,14 @@
     - php-pdo
     - php-xml
     - php-zip
+    - php-pecl-xdebug
 
 - name: deploy php.ini
   template:
     src: php.ini.j2
     dest: /etc/php.ini
+
+- name: deploy 
+  template:
+    src: 15-xdebug.ini.j2
+    dest: /etc/php.d/15-xdebug.ini
