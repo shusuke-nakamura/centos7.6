@@ -1,0 +1,6 @@
+---
+- name: nパッケージのインストール
+  command: npm install -g n
+
+- name: nodejsの最新化
+  command: n latest

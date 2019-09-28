@@ -11,6 +11,7 @@
     - httpd
     - php
     - mariadb
+    - nodejs
     - coffeescript
     - usermod
 
