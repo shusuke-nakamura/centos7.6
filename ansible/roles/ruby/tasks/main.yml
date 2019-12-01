@@ -47,7 +47,7 @@
   ignore_errors: yes
 
 # ========================================================
-# ruby 2.6.2バージョンをインストールする
+# ruby 2.6.Xバージョンをインストールする
 # ========================================================
 - name: install ruby
   shell: bash -lc "rbenv install -v {{ config_ruby_version }}"

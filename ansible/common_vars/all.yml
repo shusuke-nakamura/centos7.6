@@ -2,5 +2,5 @@
 config_locale: ja_JP.UTF-8
 config_zone: Asia/Tokyo
 config_keymap: jp106
-config_ruby_version: 2.6.4
+config_ruby_version: 2.6.5
 config_ruby_install_dir: /usr/local/rbenv
